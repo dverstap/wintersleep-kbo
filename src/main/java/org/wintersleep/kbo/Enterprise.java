@@ -26,15 +26,13 @@ package org.wintersleep.kbo;
  * #L%
  */
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.StringJoiner;
 
 @Entity
@@ -54,14 +52,17 @@ public class Enterprise extends KboEntity {
     @Column(name = "TypeOfEnterprise", nullable = false)
     EnterpriseType type;
 
-    @Column(name = "JuridicalForm", nullable = false)
+    @Column(name = "JuridicalForm")
     String juridicalForm;
 
-    @Column(name = "JuridicalFormCAC", nullable = false)
+    @Column(name = "JuridicalFormCAC")
     String juridicalFormCAC;
 
     @Column(name = "StartDate", nullable = false)
     LocalDate startDate;
+
+    @OneToMany(mappedBy = "enterprise", cascade = CascadeType.ALL)
+    private Set<Establishment> establishments;
 
     @Override
     public String toString() {

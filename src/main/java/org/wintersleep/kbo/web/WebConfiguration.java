@@ -1,4 +1,4 @@
-package org.wintersleep.kbo;
+package org.wintersleep.kbo.web;
 
 /*-
  * #%L
@@ -26,35 +26,24 @@ package org.wintersleep.kbo;
  * #L%
  */
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.time.LocalDate;
-import java.util.StringJoiner;
+@Configuration
+public class WebConfiguration {
 
-@Entity
-@Table(name = "establishment")
-@PrimaryKeyJoinColumn(name = "EstablishmentNumber")
-@NoArgsConstructor
-@Getter
-@Setter
-public class Establishment extends KboEntity {
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "EnterpriseNumber", nullable = false)
-    private Enterprise enterprise;
-
-    @Column(name = "StartDate", nullable = false)
-    LocalDate startDate;
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Establishment.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("enterprise.id=" + enterprise.id)
-                .add("startDate=" + startDate)
-                .toString();
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                // TODO obviously not acceptable:
+                registry.addMapping("/**")
+                        .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+            }
+        };
     }
 }

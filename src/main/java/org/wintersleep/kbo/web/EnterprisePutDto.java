@@ -1,4 +1,4 @@
-package org.wintersleep.kbo;
+package org.wintersleep.kbo.web;
 
 /*-
  * #%L
@@ -26,35 +26,18 @@ package org.wintersleep.kbo;
  * #L%
  */
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Builder;
+import org.wintersleep.kbo.EnterpriseType;
 
 import java.time.LocalDate;
-import java.util.StringJoiner;
 
-@Entity
-@Table(name = "establishment")
-@PrimaryKeyJoinColumn(name = "EstablishmentNumber")
-@NoArgsConstructor
-@Getter
-@Setter
-public class Establishment extends KboEntity {
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "EnterpriseNumber", nullable = false)
-    private Enterprise enterprise;
-
-    @Column(name = "StartDate", nullable = false)
-    LocalDate startDate;
-
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Establishment.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("enterprise.id=" + enterprise.id)
-                .add("startDate=" + startDate)
-                .toString();
-    }
+@Builder
+public record EnterprisePutDto(
+        String status,
+        //String juridicalSituation,
+        EnterpriseType type,
+        //String juridicalForm,
+        //String juridicalFormCAC,
+        LocalDate startDate
+) {
 }

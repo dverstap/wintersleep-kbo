@@ -51,7 +51,7 @@ public abstract class KboEntity implements Comparable<KboEntity> {
     @Column(name = "EntityNumber")
     protected String id;
 
-    @OneToMany(mappedBy = "entity")
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
     private Set<Denomination> denominations;
 
     public Optional<Denomination> getOptionalDenomination() {

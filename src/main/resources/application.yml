@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
-    show-sql: true
+    # show-sql: true # This writes to stdout, does not use the logging framework
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
@@ -14,3 +14,8 @@ spring:
         # naming_strategy: org.hibernate.cfg.EJB3NamingStrategy
         # See: https://www.baeldung.com/hibernate-field-naming-spring-boot:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+logging:
+  level:
+    # sql: trace
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace

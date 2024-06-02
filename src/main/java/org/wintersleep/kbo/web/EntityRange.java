@@ -1,4 +1,4 @@
-package org.wintersleep.kbo;
+package org.wintersleep.kbo.web;
 
 /*-
  * #%L
@@ -12,10 +12,10 @@ package org.wintersleep.kbo;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,35 +26,37 @@ package org.wintersleep.kbo;
  * #L%
  */
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+// The React Admin DataProvider API uses pages: pagination: { page: number, perPage: number }
+// But the ra-data-simple-rest DataProvider implementation turns this into a range: [0, 24]
 
-import java.time.LocalDate;
-import java.util.StringJoiner;
+import lombok.NonNull;
+import org.json.JSONArray;
 
-@Entity
-@Table(name = "establishment")
-@PrimaryKeyJoinColumn(name = "EstablishmentNumber")
-@NoArgsConstructor
-@Getter
-@Setter
-public class Establishment extends KboEntity {
+// inclusive range
+public record EntityRange(
+        long from,
+        long to
+) {
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "EnterpriseNumber", nullable = false)
-    private Enterprise enterprise;
 
-    @Column(name = "StartDate", nullable = false)
-    LocalDate startDate;
+    public static @NonNull EntityRange parse(String str) {
+        if (str == null || str.isBlank()) {
+            return new EntityRange(0, 9);
+        }
+        JSONArray array = new JSONArray(str);
+        if (array.length() != 2) {
+            throw new IllegalArgumentException("Invalid entity range JSON: " + str + " (Expected exactly two numbers)");
+        }
+        long from = array.getLong(0);
+        long to = array.getLong(1);
+        return new EntityRange(from, to);
+    }
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Establishment.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("enterprise.id=" + enterprise.id)
-                .add("startDate=" + startDate)
-                .toString();
+    public long offset() {
+        return from;
+    }
+
+    public long limit() {
+        return to - from + 1;
     }
 }

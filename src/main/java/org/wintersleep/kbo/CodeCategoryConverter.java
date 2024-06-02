@@ -26,35 +26,32 @@ package org.wintersleep.kbo;
  * #L%
  */
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
-import java.time.LocalDate;
-import java.util.StringJoiner;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "establishment")
-@PrimaryKeyJoinColumn(name = "EstablishmentNumber")
-@NoArgsConstructor
-@Getter
-@Setter
-public class Establishment extends KboEntity {
+@Converter(autoApply = true)
+public class CodeCategoryConverter implements AttributeConverter<CodeCategory, String> {
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "EnterpriseNumber", nullable = false)
-    private Enterprise enterprise;
-
-    @Column(name = "StartDate", nullable = false)
-    LocalDate startDate;
+    private final static Map<String, CodeCategory> CODE_CATEGORY_MAP
+            = Arrays.stream(CodeCategory.values()).collect(Collectors.toMap(CodeCategory::getId, Function.identity()));
 
     @Override
-    public String toString() {
-        return new StringJoiner(", ", Establishment.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("enterprise.id=" + enterprise.id)
-                .add("startDate=" + startDate)
-                .toString();
+    public String convertToDatabaseColumn(CodeCategory attribute) {
+        return attribute.getId();
     }
+
+    @Override
+    public CodeCategory convertToEntityAttribute(String dbData) {
+        var result = CODE_CATEGORY_MAP.get(dbData);
+        if (result == null) {
+            throw new IllegalArgumentException("Unknown code category: " + dbData);
+        }
+        return result;
+    }
+
 }

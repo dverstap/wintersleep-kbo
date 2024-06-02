@@ -26,35 +26,29 @@ package org.wintersleep.kbo;
  * #L%
  */
 
-import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDate;
-import java.util.StringJoiner;
-
-@Entity
-@Table(name = "establishment")
-@PrimaryKeyJoinColumn(name = "EstablishmentNumber")
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
-@Setter
-public class Establishment extends KboEntity {
+public enum CodeCategory {
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "EnterpriseNumber", nullable = false)
-    private Enterprise enterprise;
+    ActivityGroup("ActivityGroup"),
+    Category("Category"),
+    Classification("Classification"),
+    ContactType("ContactType"),
+    EntityContact("EntityContact"),
+    JuridicalForm("JuridicalForm"),
+    JuridicalSituation("JuridicalSituation"),
+    Language("Language"),
+    Nace2003("Nace2003"),
+    Nace2008("Nace2008"),
+    Status("Status"),
+    TypeOfAddress("TypeOfAddress"),
+    TypeOfDenomination("TypeOfDenomination"),
+    TypeOfEnterprise("TypeOfEnterprise"),
+    ;
 
-    @Column(name = "StartDate", nullable = false)
-    LocalDate startDate;
+    private final String id;
 
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", Establishment.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("enterprise.id=" + enterprise.id)
-                .add("startDate=" + startDate)
-                .toString();
-    }
 }

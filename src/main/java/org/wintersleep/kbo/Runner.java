@@ -36,7 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class Runner implements CommandLineRunner {
 
