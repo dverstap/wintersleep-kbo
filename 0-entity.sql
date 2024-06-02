@@ -12,24 +12,27 @@ load data local infile 'data/enterprise.csv'
     fields terminated by ','
     optionally enclosed by '"'
     ignore 1 lines
-    (EntityNumber)
+    (EntityNumber, @dummy, @dummy, @dummy, @dummy, @dummy, @dummy)
 ;
+show warnings;
 
 load data local infile 'data/establishment.csv'
     into table kbo_entity
     fields terminated by ','
     optionally enclosed by '"'
     ignore 1 lines
-    (EntityNumber)
+    (EntityNumber, @dummy, @dummy)
 ;
+show warnings;
 
 load data local infile 'data/branch.csv'
     into table kbo_entity
     fields terminated by ','
     optionally enclosed by '"'
     ignore 1 lines
-    (EntityNumber)
+    (EntityNumber, @dummy, @dummy)
 ;
+show warnings;
 
 select count(*) as kbo_entity_count
 from kbo_entity;

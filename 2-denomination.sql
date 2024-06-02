@@ -1,4 +1,3 @@
-
 drop table if exists denomination;
 create table if not exists denomination
 (
@@ -16,7 +15,9 @@ load data local infile 'data/denomination.csv'
     fields terminated by ','
     optionally enclosed by '"'
     ignore 1 lines
+    (EntityNumber, Language, TypeOfDenomination, Denomination)
 ;
+show warnings;
 
 select count(*) as denomination_count
 from denomination;

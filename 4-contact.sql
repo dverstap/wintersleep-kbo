@@ -15,7 +15,9 @@ load data local infile 'data/contact.csv'
     fields terminated by ','
     optionally enclosed by '"'
     ignore 1 lines
+    (EntityNumber, EntityContact, ContactType, Value)
 ;
+show warnings;
 
 select count(*) as contact_count
 from contact;
