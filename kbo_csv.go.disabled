@@ -1,0 +1,57 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/gocarina/gocsv"
+)
+
+type CsvAddress struct {
+	EntityNumber     string `csv:"EntityNumber"`
+	TypeOfAddress    string `csv:"TypeOfAddress"`
+	CountryNL        string `csv:"CountryNL"`
+	CountryFR        string `csv:"CountryFR"`
+	Zipcode          string `csv:"Zipcode"`
+	MunicipalityNL   string `csv:"MunicipalityNL"`
+	MunicipalityFR   string `csv:"MunicipalityFR"`
+	StreetNL         string `csv:"StreetNL"`
+	StreetFR         string `csv:"StreetFR"`
+	HouseNumber      string `csv:"HouseNumber"`
+	Box              string `csv:"Box"`
+	ExtraAddressInfo string `csv:"ExtraAddressInfo"`
+	DateStrikingOff  string `csv:"DateStrikingOff"`
+}
+
+func main() {
+	addressFile, err := os.OpenFile("data/address.csv", os.O_RDWR|os.O_CREATE, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+	defer addressFile.Close()
+
+	clients := []*CsvAddress{}
+
+	if err := gocsv.UnmarshalFile(addressFile, &clients); err != nil { // Load clients from file
+		panic(err)
+	}
+	for _, client := range clients {
+		fmt.Println("Hello", client.EntityNumber)
+	}
+
+	if _, err := addressFile.Seek(0, 0); err != nil { // Go to the start of the file
+		panic(err)
+	}
+
+	/*	clients = append(clients, &CsvAddress{Id: "12", Name: "John", Age: "21"}) // Add clients
+		clients = append(clients, &CsvAddress{Id: "13", Name: "Fred"})
+		clients = append(clients, &CsvAddress{Id: "14", Name: "James", Age: "32"})
+		clients = append(clients, &CsvAddress{Id: "15", Name: "Danny"})
+		csvContent, err := gocsv.MarshalString(&clients) // Get all clients as CSV string
+		//err = gocsv.MarshalFile(&clients, addressFile) // Use this to save the CSV back to the file
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(csvContent) // Display all clients as CSV string
+	*/
+}

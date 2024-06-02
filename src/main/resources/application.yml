@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/kbo
+    username: kbo
+    password: kbo
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show-sql: true
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      naming:
+        # naming_strategy: org.hibernate.cfg.EJB3NamingStrategy
+        # See: https://www.baeldung.com/hibernate-field-naming-spring-boot:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

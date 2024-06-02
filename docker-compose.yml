@@ -1,0 +1,42 @@
+version: "3"
+services:
+
+  mysql:
+    image: 'mysql:8.0.37'
+    command: >-
+      mysqld
+      --lower-case-table-names=1
+      --local-infile=ON
+      --innodb-buffer-pool-size=1G
+#      --disable-log-bin
+#      --innodb-flush-log-at-trx-commit=0
+#      --slow-query-log
+#      --long-query-time=0
+#      --log-queries-not-using-indexes
+#      --slow-query-log-file=/var/lib/mysql/slow.log
+# Read-only mounting doesn't work on Windows, and MySQL refuses to use world-writable config files
+# (because that would be a major security problem).
+#    volumes:
+#      - './docker/etc/mysql/conf.d/:/etc/mysql/conf.d/:ro'
+# A custom image with a custom config file would require you to rebuild your image
+# when changing the config file, which could be error-prone:
+#    build:
+#      context: docker/
+#      dockerfile: mysql.docker
+    ports:
+      - "3306:3306"
+    tmpfs:
+      - /var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_DATABASE=kbo
+      - MYSQL_USER=kbo
+      - MYSQL_PASSWORD=kbo
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    # https://stackoverflow.com/questions/55559386/how-to-fix-mbind-operation-not-permitted-in-mysql-error-log:
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - mysql:/var/lib/mysql
+volumes:
+  mysql:
